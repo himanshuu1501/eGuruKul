@@ -1,129 +1,256 @@
-# eGuruKul
+# **eGuruKul**
 
-**eGuruKul** is a full-stack **Learning Management System (LMS)** built with the **MERN stack** (MongoDB, Express.js, React.js, Node.js).
-It allows students to browse courses, enroll, and track progress, while instructors can create, manage, and publish courses.
+**eGuruKul** is a full-stack **Learning Management System (LMS)** built using the **MERN Stack** — **MongoDB, Express.js, React.js, and Node.js**.
 
----
-
-## Features
-
-- **Authentication & Authorization**
-  - Secure login/signup using JWT
-  - Role-based access: **instructor** (course creator) / **student** (learner)
-
-- **Student Experience**
-  - Browse and search published courses
-  - Purchase courses via Razorpay (INR)
-  - Track course progress with lecture-level completion
-  - Manage profile
-
-- **Instructor Dashboard**
-  - Create, edit, publish/unpublish, and delete courses
-  - Add/edit/remove lectures with video uploads
-  - Revenue dashboard with sales charts
-
-- **Courses & Lectures**
-  - Video lectures via Cloudinary
-  - Course thumbnails, descriptions, categories, levels, pricing
-  - Free and paid course support
-
-- **Modern UI**
-  - React + Tailwind CSS + shadcn/ui
-  - Dark mode support
-  - Responsive for mobile and desktop
+It provides a **role-based e-learning platform** where students can browse and purchase courses, track their learning progress, apply to become instructors, and manage their profiles. Instructor access is controlled through an **admin approval workflow**.
 
 ---
 
-## Tech Stack
+## **🚀 Features**
 
-**Frontend:** React.js, Redux Toolkit (RTK Query), React Router, Tailwind CSS, shadcn/ui
+### **🔐 Authentication & Authorization**
 
-**Backend:** Node.js, Express.js, MongoDB, Mongoose, Multer, Cloudinary, Razorpay
+- Secure **login and signup** using **JWT-based authentication**
+- **Role-Based Access Control (RBAC)** for **Student**, **Instructor**, and **Admin**
+- Protected routes to restrict unauthorized dashboard and course management access
+- Secure authentication using **JWT tokens and HTTP cookies**
 
----
+### **👨‍🎓 Student Experience**
 
-## Environment Variables
+- Browse and search **published courses**
+- View detailed course information
+- Purchase paid courses using **Razorpay**
+- Access **free courses**
+- Track **lecture-level course progress**
+- Manage and update user profile
+- Apply to become an instructor
+- Track instructor application status
 
-Create a `.env` file inside the `server/` folder (see `server/.env.example`):
+### **👨‍🏫 Instructor Application & Approval Workflow**
 
-```
+- Students can apply to become instructors using their existing account
+- Instructor applications remain in a **Pending** state until reviewed
+- **Admin approval workflow** for instructor access
+- Admin can **approve or reject** instructor applications
+- Approved users receive instructor privileges without creating a separate account
+- Admin can remove instructor access when required
+
+```text
+Student Account
+      ↓
+Apply to Become an Instructor
+      ↓
+Application Pending
+      ↓
+Admin Review
+      ↓
+Approved / Rejected
+      ↓
+Instructor Access Enabled
+
+📚 Instructor Dashboard
+Create new courses
+Edit and update course information
+Publish and unpublish courses
+Delete courses
+Create, edit, and remove lectures
+Upload and manage course content
+Set course price, category, level, description, and thumbnail
+View course sales and revenue analytics
+🛡️ Admin Dashboard
+Dedicated dashboard for platform management
+Review instructor applications
+Approve or reject instructor requests
+Manage instructor access
+Remove instructor privileges when required
+Monitor platform activity
+Manage courses and educational content
+🎥 Courses & Lectures
+Create structured courses with multiple lectures
+Video lecture management with Cloudinary integration
+Course thumbnails and rich descriptions
+Course categories and difficulty levels
+Free and paid course support
+Course publishing workflow
+Lecture-level learning progress tracking
+Rich text editor for detailed course descriptions
+💳 Course Purchase & Enrollment
+Paid course purchase integration using Razorpay
+Free course enrollment support
+Secure course enrollment workflow
+Purchased courses available in the student's dashboard
+Learning progress tracking for enrolled courses
+🎨 Modern User Interface
+Built with React.js
+Styled using Tailwind CSS
+Reusable UI components with shadcn/ui
+Responsive design for desktop and mobile devices
+Dashboard-based navigation
+Toast notifications for user actions
+Modern and intuitive user experience
+🛠️ Tech Stack
+Frontend
+React.js
+Vite
+Redux Toolkit
+RTK Query
+React Router
+Tailwind CSS
+shadcn/ui
+Lucide React
+Sonner
+Backend
+Node.js
+Express.js
+MongoDB
+Mongoose
+JWT Authentication
+bcrypt.js
+Multer
+Third-Party Services
+Cloudinary — Media and video uploads
+Razorpay — Course payment integration
+🔑 Environment Variables
+
+Create a .env file inside the server/ folder.
+
+Refer to server/.env.example for the required environment variables.
+
 PORT=5000
 NODE_ENV=development
 FRONTEND_URL=http://localhost:5173
+
+
 MONGO_URI=
 SECRET_KEY=
 JWT_EXPIRE=5d
 COOKIE_EXPIRE=5
+
+
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
-SMTP_SERVICE=gmail
-SMTP_MAIL=
-SMTP_PASSWORD=
+
+
 RAZORPAY_KEY_ID=
 RAZORPAY_KEY_SECRET=
-```
 
----
+Important: Never commit your actual .env file containing secrets to GitHub.
 
-## Installation & Setup
-
-```bash
-git clone https://github.com/sureshkumarhere/eGuruKul.git
+⚙️ Installation & Setup
+1. Clone the Repository
+git clone https://github.com/Piyush-K-IIT/eGuruKul.git
 cd eGuruKul
-
-# Server
+2. Setup the Backend
 cd server
 npm install
-cp .env.example .env   # fill in your values
-npm run dev
 
-# Client (in a new terminal)
+Create a .env file using .env.example and add your environment variables.
+
+Start the backend:
+
+npm run dev
+3. Setup the Frontend
+
+Open a new terminal and run:
+
 cd client
 npm install
 npm run dev
-```
 
----
+The frontend will run on:
 
-## Seed Sample Data
+http://localhost:5173
+🌱 Seed Sample Data
 
-To populate the database with a demo instructor account and 5 sample courses:
+To populate the database with sample data:
 
-```bash
 cd server
 npm run seed
-```
 
-This creates:
-- **Instructor account:** `instructor@egurukul.com` / `instructor123`
-- **5 published courses** across different categories
+This can create demo data such as:
 
-The seed script is idempotent — running it again will skip already-created data.
+Sample instructor account
+Sample courses
+Published course data
 
----
+Update the seed data according to your current server/seed.js configuration.
 
-## Testing the Flows
-
-### Student Flow
-1. Sign up at `/login` (Signup tab) — new users are students by default
-2. Browse courses on the homepage
-3. Click a course to see details
-4. Purchase with Razorpay (or enroll free courses instantly)
-5. Access course content and track progress
-
-### Instructor Flow
-1. Log in as `instructor@egurukul.com` / `instructor123` (or change any user's role to "instructor" in MongoDB)
-2. You'll be redirected to `/admin/dashboard`
-3. Use the sidebar to manage courses: Create → Edit → Add Lectures → Publish
-4. Published courses appear on the student homepage automatically
-5. Use "Back to Home" in the sidebar to view the student-facing site
-
----
-
-## Roles
-
-| Role       | Description                        |
-|------------|------------------------------------|
-| student    | Default role, can browse & enroll  |
-| instructor | Can create and manage courses      |
+🧪 Testing the Application
+👨‍🎓 Student Flow
+Sign up or log in using a student account
+Browse and search available courses
+View detailed course information
+Purchase a paid course using Razorpay or enroll in a free course
+Access course lectures
+Track learning progress
+Apply to become an instructor if desired
+👨‍🏫 Instructor Flow
+Submit an instructor application using a student account
+Wait for admin approval
+Log in using the same approved account
+Access the instructor dashboard
+Create a new course
+Add course details and lectures
+Publish the course
+Manage course content and analytics
+🛡️ Admin Flow
+Log in using an admin account
+Access the admin dashboard
+Review pending instructor applications
+Approve or reject instructor requests
+Manage instructor access
+Monitor courses and platform activity
+👥 Roles & Permissions
+Role	Description
+Student	Default user role; can browse, purchase, enroll, and learn from courses
+Instructor	Can create, manage, and publish courses after admin approval
+Admin	Manages instructor applications, instructors, courses, and platform operations
+📁 Project Structure
+eGuruKul/
+│
+├── client/
+│   ├── src/
+│   │   ├── app/
+│   │   ├── components/
+│   │   ├── features/
+│   │   └── pages/
+│   │       ├── admin/
+│   │       ├── instructor/
+│   │       └── student/
+│   │
+│   └── package.json
+│
+├── server/
+│   ├── controllers/
+│   ├── middlewares/
+│   ├── models/
+│   ├── routes/
+│   ├── utils/
+│   ├── seed.js
+│   └── index.js
+│
+├── .gitignore
+└── README.md
+✨ Key Highlights
+Full-Stack MERN Architecture
+JWT-Based Authentication
+Role-Based Access Control
+Admin-Controlled Instructor Approval Workflow
+Protected Routes
+Course Creation and Publishing Lifecycle
+Lecture and Video Content Management
+Razorpay Payment Integration
+Course Enrollment
+Lecture-Level Progress Tracking
+Cloudinary Media Management
+Responsive Modern UI
+🔮 Future Improvements
+Email or in-app notifications
+Course reviews and ratings
+Certificates after course completion
+Advanced search and filtering
+Personalized course recommendations
+Instructor performance analytics
+Advanced admin reporting
+Student discussion and Q&A system
