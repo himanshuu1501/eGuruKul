@@ -2,7 +2,7 @@ import { ArrowLeft, ChartNoAxesColumn, SquareLibrary } from "lucide-react";
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 
-const Sidebar = () => {
+const InstructorSidebar = () => {
   return (
     <div className="flex">
       <div className="hidden lg:block w-[250px] sm:w-[300px] space-y-8 border-r border-gray-300 dark:border-gray-700  p-5 sticky top-0  h-screen">
@@ -28,4 +28,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default InstructorSidebar;

@@ -22,6 +22,7 @@ import {
   useEditCourseMutation,
   useGetCourseByIdQuery,
   usePublishCourseMutation,
+  useDeleteCourseMutation,
 } from "@/features/api/courseApi";
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -32,7 +33,7 @@ const CourseTab = () => {
   
   const [input, setInput] = useState({
     courseTitle: "",
-    subTitle: "",
+    subtitle: "",
     description: "",
     category: "",
     courseLevel: "",
@@ -45,14 +46,15 @@ const CourseTab = () => {
   const { data: courseByIdData, isLoading: courseByIdLoading , refetch} =
     useGetCourseByIdQuery(courseId);
 
-    const [publishCourse, {}] = usePublishCourseMutation();
+    const [publishCourse] = usePublishCourseMutation();
+    const [deleteCourse, { isLoading: deleteLoading }] = useDeleteCourseMutation();
  
   useEffect(() => {
     if (courseByIdData?.course) { 
         const course = courseByIdData?.course;
       setInput({
         courseTitle: course.courseTitle,
-        subTitle: course.subTitle,
+        subtitle: course.subtitle || "",
         description: course.description,
         category: course.category,
         courseLevel: course.courseLevel,
@@ -93,7 +95,7 @@ const CourseTab = () => {
   const updateCourseHandler = async () => {
     const formData = new FormData();
     formData.append("courseTitle", input.courseTitle);
-    formData.append("subTitle", input.subTitle);
+    formData.append("subtitle", input.subtitle);
     formData.append("description", input.description);
     formData.append("category", input.category);
     formData.append("courseLevel", input.courseLevel);
@@ -139,7 +141,17 @@ const CourseTab = () => {
           <Button disabled={courseByIdData?.course.lectures.length === 0} variant="outline" onClick={()=> publishStatusHandler(courseByIdData?.course.isPublished ? "false" : "true")}>
             {courseByIdData?.course.isPublished ? "Unpublished" : "Publish"}
           </Button>
-          <Button>Remove Course</Button>
+          <Button disabled={deleteLoading} variant="destructive" onClick={async () => {
+            try {
+              const res = await deleteCourse(courseId).unwrap();
+              toast.success(res.message || "Course deleted.");
+              navigate("/instructor/course");
+            } catch (err) {
+              toast.error(err?.data?.message || "Failed to delete course");
+            }
+          }}>
+            {deleteLoading ? "Deleting..." : "Remove Course"}
+          </Button>
         </div>
       </CardHeader>
       <CardContent>
@@ -158,8 +170,8 @@ const CourseTab = () => {
             <Label>Subtitle</Label>
             <Input
               type="text"
-              name="subTitle"
-              value={input.subTitle}
+              name="subtitle"
+              value={input.subtitle}
               onChange={changeEventHandler}
               placeholder="Ex. Become a Fullstack developer from zero to hero in 2 months"
             />
@@ -249,7 +261,7 @@ const CourseTab = () => {
             )}
           </div>
           <div>
-            <Button onClick={() => navigate("/admin/course")} variant="outline">
+            <Button onClick={() => navigate("/instructor/course")} variant="outline">
               Cancel
             </Button>
             <Button disabled={isLoading} onClick={updateCourseHandler}>

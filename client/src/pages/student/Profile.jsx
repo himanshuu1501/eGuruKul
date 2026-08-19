@@ -14,11 +14,11 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Course from "./Course";
-import {
-  useLoadUserQuery,
+import { useLoadUserQuery,
   useUpdateUserMutation,
 } from "@/features/api/authApi";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const [name, setName] = useState("");
@@ -109,6 +109,31 @@ const Profile = () => {
               </span>
             </h1>
           </div>
+          {user?.role === "student" && user?.instructorApplicationStatus === "pending" && (
+            <div className="mb-2">
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+                <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                  ⏳ Your instructor application is currently under review.
+                </p>
+              </div>
+            </div>
+          )}
+          {user?.role === "student" && user?.instructorApplicationStatus === "rejected" && (
+            <div className="mb-2">
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                <p className="text-sm text-red-800 dark:text-red-200">
+                  Your instructor application was not approved.
+                </p>
+              </div>
+            </div>
+          )}
+          {user?.role === "student" && !user?.instructorApplicationStatus && (
+            <div className="mb-2 mt-2">
+              <Link to="/become-instructor">
+                <Button size="sm" variant="outline">Become an Instructor</Button>
+              </Link>
+            </div>
+          )}
           <Dialog>
             <DialogTrigger asChild>
               <Button size="sm" className="mt-2">

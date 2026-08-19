@@ -17,8 +17,12 @@ const Courses = () => {
             Array.from({ length: 8 }).map((_, index) => (
               <CourseSkeleton key={index} />
             ))
+          ) : data?.courses?.length > 0 ? (
+           data.courses.map((course, index) => <Course key={index} course={course}/>) 
           ) : (
-           data?.courses && data.courses.map((course, index) => <Course key={index} course={course}/>) 
+            <div className="col-span-full text-center py-10">
+              <p className="text-gray-500 text-lg">No courses available yet. Check back soon!</p>
+            </div>
           )}
         </div>
       </div>

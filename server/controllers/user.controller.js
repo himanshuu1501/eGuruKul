@@ -24,7 +24,9 @@ export const register = async (req,res) => {
         await User.create({
             name,
             email,
-            password:hashedPassword
+            password:hashedPassword,
+            role:"student",
+            instructorApplicationStatus:"none"
         });
         return res.status(201).json({
             success:true,

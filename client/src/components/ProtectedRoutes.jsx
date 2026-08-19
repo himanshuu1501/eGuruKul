@@ -1,35 +1,57 @@
-import { useSelector } from "react-redux"
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
-export const ProtectedRoute = ({children}) => {
-    const {isAuthenticated} = useSelector(store=>store.auth);
+export const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useSelector((store) => store.auth);
 
-    if(!isAuthenticated){
-        return <Navigate to="/login"/>
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
+export const AuthenticatedUser = ({ children }) => {
+  const { user, isAuthenticated } = useSelector((store) => store.auth);
+
+  if (isAuthenticated) {
+    if (user?.role === "instructor") {
+      return <Navigate to="/instructor/dashboard" replace />;
+    }
+    if (user?.role === "admin") {
+      return <Navigate to="/admin/dashboard" replace />;
     }
 
-    return children;
-}
-export const AuthenticatedUser = ({children}) => {
-    const {isAuthenticated} = useSelector(store=>store.auth);
+    return <Navigate to="/" replace />;
+  }
 
-    if(isAuthenticated){
-        return <Navigate to="/"/>
-    }
+  return children;
+};
 
-    return children;
-}
+export const InstructorRoute = ({ children }) => {
+  const { user, isAuthenticated } = useSelector((store) => store.auth);
 
-export const AdminRoute = ({children}) => {
-    const {user, isAuthenticated} = useSelector(store=>store.auth);
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
-    if(!isAuthenticated){
-        return <Navigate to="/login"/>
-    }
+  if (user?.role !== "instructor") {
+    return <Navigate to="/" replace />;
+  }
 
-    if(user?.role !== "instructor"){
-        return <Navigate to="/"/>
-    }
+  return children;
+};
 
-    return children;
-}
+export const AdminRoute = ({ children }) => {
+  const { user, isAuthenticated } = useSelector((store) => store.auth);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user?.role !== "admin") {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+};

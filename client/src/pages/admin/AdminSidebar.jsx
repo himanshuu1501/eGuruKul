@@ -1,8 +1,8 @@
-import { ArrowLeft, ChartNoAxesColumn, SquareLibrary } from "lucide-react";
+import { ArrowLeft, Users, BarChart3 } from "lucide-react";
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 
-const Sidebar = () => {
+const AdminSidebar = () => {
   return (
     <div className="flex">
       <div className="hidden lg:block w-[250px] sm:w-[300px] space-y-8 border-r border-gray-300 dark:border-gray-700  p-5 sticky top-0  h-screen">
@@ -12,12 +12,12 @@ const Sidebar = () => {
             <span>Back to Home</span>
           </Link>
           <Link to="dashboard" className="flex items-center gap-2">
-            <ChartNoAxesColumn size={22} />
+            <BarChart3 size={22} />
             <h1>Dashboard</h1>
           </Link>
-          <Link to="course" className="flex items-center gap-2">
-            <SquareLibrary size={22} />
-            <h1>Courses</h1>
+          <Link to="instructor-applications" className="flex items-center gap-2">
+            <Users size={22} />
+            <h1>Instructor Applications</h1>
           </Link>
         </div>
       </div>
@@ -28,4 +28,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default AdminSidebar;

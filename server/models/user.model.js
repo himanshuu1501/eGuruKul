@@ -15,8 +15,13 @@ const userSchema = new mongoose.Schema({
     },
     role:{
         type:String,
-        enum:["instructor", "student"],
+        enum:["student", "instructor", "admin"],
         default:'student'
+    },
+    instructorApplicationStatus:{
+        type:String,
+        enum:["none", "pending", "approved", "rejected"],
+        default:'none'
     },
     enrolledCourses:[
         {

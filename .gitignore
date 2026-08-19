@@ -1,0 +1,16 @@
+node_modules/
+.env
+*.log
+.freediff/
+dist/
+dist-ssr/
+build/
+coverage/
+*.local
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.tmp
+*.bak

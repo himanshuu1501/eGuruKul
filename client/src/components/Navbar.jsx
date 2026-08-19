@@ -78,6 +78,21 @@ const Navbar = () => {
                     {" "}
                     <Link to="profile">Edit Profile</Link>{" "}
                   </DropdownMenuItem>
+                  {user?.role === "student" &&
+                    user?.instructorApplicationStatus !== "approved" && (
+                      <DropdownMenuItem>
+                        <Link to="/become-instructor">
+                          Become an Instructor
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+                  {user?.instructorApplicationStatus === "pending" && (
+                    <DropdownMenuItem disabled>
+                      <span className="text-yellow-600">
+                        ⏳ Application Pending
+                      </span>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem onClick={logoutHandler}>
                     Log out
                   </DropdownMenuItem>
@@ -85,7 +100,17 @@ const Navbar = () => {
                 {user?.role === "instructor" && (
                   <>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem><Link to="/admin/dashboard">Dashboard</Link></DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link to="/instructor/dashboard">Instructor Dashboard</Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
+                {user?.role === "admin" && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <Link to="/admin/dashboard">Admin Dashboard</Link>
+                    </DropdownMenuItem>
                   </>
                 )}
               </DropdownMenuContent>
@@ -104,7 +129,7 @@ const Navbar = () => {
       {/* Mobile device  */}
       <div className="flex md:hidden items-center justify-between px-4 h-full">
         <h1 className="font-extrabold text-2xl">E-learning</h1>
-        <MobileNavbar user={user}/>
+        <MobileNavbar user={user} />
       </div>
     </div>
   );
@@ -112,9 +137,9 @@ const Navbar = () => {
 
 export default Navbar;
 
-const MobileNavbar = ({user}) => {
+const MobileNavbar = ({ user }) => {
   const navigate = useNavigate();
-  
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -128,19 +153,46 @@ const MobileNavbar = ({user}) => {
       </SheetTrigger>
       <SheetContent className="flex flex-col">
         <SheetHeader className="flex flex-row items-center justify-between mt-2">
-          <SheetTitle> <Link to="/">E-Learning</Link></SheetTitle>
+          <SheetTitle>
+            {" "}
+            <Link to="/">E-Learning</Link>
+          </SheetTitle>
           <DarkMode />
         </SheetHeader>
         <Separator className="mr-2" />
         <nav className="flex flex-col space-y-4">
           <Link to="/my-learning">My Learning</Link>
           <Link to="/profile">Edit Profile</Link>
+          {user?.role === "student" &&
+            user?.instructorApplicationStatus !== "approved" && (
+              <Link to="/become-instructor">Become an Instructor</Link>
+            )}
+          {user?.instructorApplicationStatus === "pending" && (
+            <span className="text-yellow-600">⏳ Application Pending</span>
+          )}
           <p>Log out</p>
         </nav>
         {user?.role === "instructor" && (
           <SheetFooter>
             <SheetClose asChild>
-              <Button type="submit" onClick={()=> navigate("/admin/dashboard")}>Dashboard</Button>
+              <Button
+                type="submit"
+                onClick={() => navigate("/instructor/dashboard")}
+              >
+                Instructor Dashboard
+              </Button>
+            </SheetClose>
+          </SheetFooter>
+        )}
+        {user?.role === "admin" && (
+          <SheetFooter>
+            <SheetClose asChild>
+              <Button
+                type="submit"
+                onClick={() => navigate("/admin/dashboard")}
+              >
+                Admin Dashboard
+              </Button>
             </SheetClose>
           </SheetFooter>
         )}

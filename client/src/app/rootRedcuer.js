@@ -4,12 +4,14 @@ import { authApi } from "@/features/api/authApi";
 import { courseApi } from "@/features/api/courseApi";
 import { purchaseApi } from "@/features/api/purchaseApi";
 import { courseProgressApi } from "@/features/api/courseProgressApi";
+import { instructorApplicationApi } from "@/features/api/instructorApplicationApi";
 
 const rootRedcuer = combineReducers({
     [authApi.reducerPath]:authApi.reducer,
     [courseApi.reducerPath]:courseApi.reducer,
     [purchaseApi.reducerPath]:purchaseApi.reducer,
     [courseProgressApi.reducerPath]:courseProgressApi.reducer,
+    [instructorApplicationApi.reducerPath]:instructorApplicationApi.reducer,
     auth:authReducer, 
 });
 export default rootRedcuer;

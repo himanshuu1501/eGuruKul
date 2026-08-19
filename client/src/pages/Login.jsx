@@ -66,12 +66,29 @@ const Login = () => {
       toast.success(successMsg);
 
       if (type === "signup") {
-        // clear signup form (optional)
         setSignupInput({ name: "", email: "", password: "" });
-        // optionally switch to login tab — left out for simplicity
       } else {
-        // login success -> navigate to home
-        navigate("/");
+        // Login redirect logic
+        const userRole = result?.user?.role;
+        const appStatus = result?.user?.instructorApplicationStatus;
+
+        if (userRole === "admin") {
+          toast.info("Welcome to Admin Dashboard.");
+          navigate("/admin/dashboard");
+        } else if (userRole === "instructor") {
+          if (appStatus === "approved") {
+            toast.success("🎉 Congratulations! Your instructor application has been approved. You can now access the Instructor Dashboard.");
+          }
+          navigate("/instructor/dashboard");
+        } else if (userRole === "student" && appStatus === "pending") {
+          toast.info("⏳ Your instructor application is awaiting admin approval.");
+          navigate("/");
+        } else if (userRole === "student" && appStatus === "rejected") {
+          toast.info("Your instructor application was not approved.");
+          navigate("/");
+        } else {
+          navigate("/");
+        }
       }
     } catch (err) {
       const msg = extractMessage(err, type === "signup" ? "Signup failed" : "Login failed");

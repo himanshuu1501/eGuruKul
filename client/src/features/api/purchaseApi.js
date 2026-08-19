@@ -9,11 +9,18 @@ export const purchaseApi = createApi({
     credentials: "include",
   }),
   endpoints: (builder) => ({
-    createCheckoutSession: builder.mutation({
+    createOrder: builder.mutation({
       query: (courseId) => ({
-        url: "/checkout/create-checkout-session",
+        url: "/checkout/create-order",
         method: "POST",
         body: { courseId },
+      }),
+    }),
+    verifyPayment: builder.mutation({
+      query: (paymentData) => ({
+        url: "/checkout/verify-payment",
+        method: "POST",
+        body: paymentData,
       }),
     }),
     getCourseDetailWithStatus: builder.query({
@@ -32,7 +39,8 @@ export const purchaseApi = createApi({
 });
 
 export const {
-  useCreateCheckoutSessionMutation,
+  useCreateOrderMutation,
+  useVerifyPaymentMutation,
   useGetCourseDetailWithStatusQuery,
   useGetPurchasedCoursesQuery,
 } = purchaseApi;

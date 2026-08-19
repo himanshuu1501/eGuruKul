@@ -37,7 +37,7 @@ const AddCourse = () => {
   useEffect(()=>{
     if(isSuccess){
         toast.success(data?.message || "Course created.");
-        navigate("/admin/course");
+        navigate("/instructor/course");
     }
   },[isSuccess, error])
 
@@ -92,7 +92,7 @@ const AddCourse = () => {
           </Select>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => navigate("/admin/course")}>
+          <Button variant="outline" onClick={() => navigate("/instructor/course")}>
             Back
           </Button>
           <Button disabled={isLoading} onClick={createCourseHandler}>

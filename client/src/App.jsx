@@ -6,19 +6,29 @@ import MainLayout from "./layout/MainLayout";
 import Courses from "./pages/student/Courses";
 import MyLearning from "./pages/student/MyLearning";
 import Profile from "./pages/student/Profile";
-import Sidebar from "./pages/admin/Sidebar";
+import BecomeInstructor from "./pages/student/BecomeInstructor";
+
+// Instructor pages (renamed from admin)
+import InstructorSidebar from "./pages/instructor/Sidebar";
 import Dashboard from "./pages/admin/Dashboard";
 import CourseTable from "./pages/admin/course/CourseTable";
 import AddCourse from "./pages/admin/course/AddCourse";
 import EditCourse from "./pages/admin/course/EditCourse";
 import CreateLecture from "./pages/admin/lecture/CreateLecture";
 import EditLecture from "./pages/admin/lecture/EditLecture";
+
+// Admin pages
+import AdminSidebar from "./pages/admin/AdminSidebar";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import InstructorApplications from "./pages/admin/InstructorApplications";
+
 import CourseDetail from "./pages/student/CourseDetail";
 import CourseProgress from "./pages/student/CourseProgress";
 import SearchPage from "./pages/student/SearchPage";
 import {
   AdminRoute,
   AuthenticatedUser,
+  InstructorRoute,
   ProtectedRoute,
 } from "./components/ProtectedRoutes";
 import PurchaseCourseProtectedRoute from "./components/PurchaseCourseProtectedRoute";
@@ -63,6 +73,14 @@ const appRouter = createBrowserRouter([
         ),
       },
       {
+        path: "become-instructor",
+        element: (
+          <ProtectedRoute>
+            <BecomeInstructor />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "course/search",
         element: (
           <ProtectedRoute>
@@ -83,19 +101,19 @@ const appRouter = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <PurchaseCourseProtectedRoute>
-            <CourseProgress />
+              <CourseProgress />
             </PurchaseCourseProtectedRoute>
           </ProtectedRoute>
         ),
       },
 
-      // admin routes start from here
+      // Instructor routes (course management)
       {
-        path: "admin",
+        path: "instructor",
         element: (
-          <AdminRoute>
-            <Sidebar />
-          </AdminRoute>
+          <InstructorRoute>
+            <InstructorSidebar />
+          </InstructorRoute>
         ),
         children: [
           {
@@ -124,6 +142,26 @@ const appRouter = createBrowserRouter([
           },
         ],
       },
+
+      // Admin routes
+      {
+        path: "admin",
+        element: (
+          <AdminRoute>
+            <AdminSidebar />
+          </AdminRoute>
+        ),
+        children: [
+          {
+            path: "dashboard",
+            element: <AdminDashboard />,
+          },
+          {
+            path: "instructor-applications",
+            element: <InstructorApplications />,
+          },
+        ],
+      },
     ],
   },
 ]);
@@ -132,7 +170,7 @@ function App() {
   return (
     <main>
       <ThemeProvider>
-      <RouterProvider router={appRouter} />
+        <RouterProvider router={appRouter} />
       </ThemeProvider>
     </main>
   );

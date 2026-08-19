@@ -1,6 +1,6 @@
- 
 import { Course } from "../models/course.model.js";
 import { Lecture } from "../models/lecture.model.js";
+import { CoursePurchase } from "../models/coursePurchase.model.js";
 import {deleteMediaFromCloudinary, deleteVideoFromCloudinary, uploadMedia} from "../utils/cloudinary.js";
 
 export const createCourse = async (req,res) => {
@@ -40,7 +40,7 @@ export const searchCourse = async (req,res) => {
             isPublished:true,
             $or:[
                 {courseTitle: {$regex:query, $options:"i"}},
-                {subTitle: {$regex:query, $options:"i"}},
+                {subtitle: {$regex:query, $options:"i"}},
                 {category: {$regex:query, $options:"i"}},
             ]
         }
@@ -67,7 +67,7 @@ export const searchCourse = async (req,res) => {
 
     } catch (error) {
         console.log(error);
-        
+        return res.status(500).json({ message: "Failed to search courses" });
     }
 }
 
@@ -112,7 +112,7 @@ export const getCreatorCourses = async (req,res) => {
 export const editCourse = async (req,res) => {
     try {
         const courseId = req.params.courseId;
-        const {courseTitle, subTitle, description, category, courseLevel, coursePrice} = req.body;
+        const {courseTitle, subtitle, description, category, courseLevel, coursePrice} = req.body;
         const thumbnail = req.file;
 
         let course = await Course.findById(courseId);
@@ -120,6 +120,9 @@ export const editCourse = async (req,res) => {
             return res.status(404).json({
                 message:"Course not found!"
             })
+        }
+        if(course.creator.toString() !== req.id){
+            return res.status(403).json({ message:"You can only edit your own courses." })
         }
         let courseThumbnail;
         if(thumbnail){
@@ -132,7 +135,7 @@ export const editCourse = async (req,res) => {
         }
 
  
-        const updateData = {courseTitle, subTitle, description, category, courseLevel, coursePrice, courseThumbnail:courseThumbnail?.secure_url};
+        const updateData = {courseTitle, subtitle, description, category, courseLevel, coursePrice, courseThumbnail:courseThumbnail?.secure_url};
 
         course = await Course.findByIdAndUpdate(courseId, updateData, {new:true});
 
@@ -322,7 +325,9 @@ export const togglePublishCourse = async (req,res) => {
                 message:"Course not found!"
             });
         }
-        // publish status based on the query paramter
+        if(course.creator.toString() !== req.id){
+            return res.status(403).json({ message:"You can only publish/unpublish your own courses." })
+        }
         course.isPublished = publish === "true";
         await course.save();
 
@@ -335,5 +340,38 @@ export const togglePublishCourse = async (req,res) => {
         return res.status(500).json({
             message:"Failed to update status"
         })
+    }
+}
+
+export const deleteCourse = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const course = await Course.findById(courseId);
+        if (!course) {
+            return res.status(404).json({ message: "Course not found!" });
+        }
+        if (course.creator.toString() !== req.id) {
+            return res.status(403).json({ message: "You can only delete your own courses." });
+        }
+
+        for (const lectureId of course.lectures) {
+            const lecture = await Lecture.findByIdAndDelete(lectureId);
+            if (lecture?.publicId) {
+                await deleteVideoFromCloudinary(lecture.publicId);
+            }
+        }
+
+        if (course.courseThumbnail) {
+            const publicId = course.courseThumbnail.split("/").pop().split(".")[0];
+            await deleteMediaFromCloudinary(publicId);
+        }
+
+        await CoursePurchase.deleteMany({ courseId });
+        await Course.findByIdAndDelete(courseId);
+
+        return res.status(200).json({ message: "Course deleted successfully." });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Failed to delete course" });
     }
 }
